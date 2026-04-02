@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/style.css">
+  <title>Incident Tracker</title>
+</head>
+<body>
+  <h1>Incidents Tracker</h1>
+
+  <!-----LOGIN SECTION----->
+  <h2>login</h2>
+  <input id="email" placeholder="Email"/>
+  <input id="password" type="password" placeholder="Password"/>
+  <button onclick="login()">Login</button>
+
+  <!--------USERS------->
+  <button onclick="loadUsers()">Load Users</button>
+  <ul id="user-list"></ul>
+
+
+  <!-----INVIDENT SECTION----->
+  <h2>Incidents</h2>
+  <button onclick="loadIncidents()">Load Incidents</button>
+  
+  <button onclick="logout()">Logout</button>
+  <ul id="incident-list"></ul>
+
+  <script>
+    function getToken() {
+      return localStorage.getItem("token");
+    }
+
+    const token = getToken();
+
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      const isExpired = payload.exp < Date.now() / 1000;
+
+      if (isExpired) {
+        localStorage.removeItem("token");
+        alert("Session expired, please login again");
+      }
+    }
+    async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const res = await fetch("/api/v1/auth/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        localStorage.setItem("token", data.data.token);
+        alert("Login successful");
+        loadIncidents();
+      }else {
+        alert("Login failed")
+      }
+    }
+
+    async function loadUsers() {
+      const token = getToken();
+      const res = await fetch("/api/v1/users", {
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      });
+
+      const data = await res.json();
+
+      const list = document.getElementById("user-list");
+      list.innerHTML = "";
+
+      if (!data.success) return;
+
+      data.data.forEach(user => {
+        const li = document.createElement("li");
+        li.innerText = `${user.email} (${user.role})`;
+        list.appendChild(li);
+      });
+    }
+
+    async function loadIncidents() {
+      const token = getToken();
+      if (!token) {
+        alert("Please login first");
+        return;
+      }
+      const res = await fetch("/api/v1/incidents", {
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      });
+
+      const data = await res.json();
+
+      const list = document.getElementById("incident-list");
+      list.innerHTML = '';
+
+      if (!data.success) {
+        alert("Error: " + data.error);
+        return;
+      }
+
+      data.data.incidents.forEach(i => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${i.title}</strong><br>
+        Severity: ${i.severity}<br>
+        Status: ${i.status}`;
+        list.appendChild(li);
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      alert("logged out");
+
+      document.getElementById("incident-list").innerHTML = '';
+    }
+
+    //autoload if already logged in
+    window.onload = () => {
+      if (getToken()) {
+        loadIncidents();
+      }
+    };
+  </script>
+</body>
+</html>
