@@ -27,7 +27,7 @@ from flask_cors import CORS
 def create_app():
 
     app = Flask(__name__)
-    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173"], 
+    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173", "https://incident-tracker-ui.onrender.com"], 
     "methods": ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"], "allow_headers": ["Content-Type", "Authorization"]}}) # Enable CORS for API routes
 
     if __name__ != "__main__":
