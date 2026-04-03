@@ -9,6 +9,7 @@ from database import get_db
 from flask import current_app  
 from utils.exceptions import AuthenticationError, AuthorizationError, ValidationError
 from utils.responses import success_response, error_response
+from psycopg2.extras import RealDictCursor
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -40,7 +41,7 @@ def register():
 
     db = get_db()
     now = datetime.now(UTC).isoformat()
-    cursor = db.cursor()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
 
     cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
     if cursor.fetchone():
@@ -57,7 +58,6 @@ def register():
 #******API endpoint to login user and issue token****
 @auth_bp.route("/login", methods=["POST"])
 @limiter.limit("5 per minute")
-@cross_origin(origins=["http://localhost:5173", "http://127.0.0.1:5173"], supports_credentials=True)
 def login():
     data = request.get_json()
 
@@ -73,7 +73,7 @@ def login():
     email = email.lower().strip()
 
     db = get_db()
-    cursor = db.cursor()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
     cursor.execute(
         "SELECT * FROM users WHERE email = %s",
         (email,)
