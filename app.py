@@ -91,6 +91,7 @@ def create_app():
         response.headers["X-Request-ID"] = g.request_id
         return response
     
+    
         
 #------Global Error Handlers----------------
 
@@ -112,7 +113,8 @@ def create_app():
 
     @app.errorhandler(500)
     def handle_500(error):
-        app.logger.error(f"Internal Server Error: {error}")
+        import traceback
+        app.logger.error(f"Internal Server Error: {traceback.format_exc()}")
         return error_response("Internal server error", 500)
 
 
