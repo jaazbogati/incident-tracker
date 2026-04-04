@@ -1,68 +1,61 @@
-Incident Tracker Backend Project
-=================================
+# 🚨 Incident Tracker API (Backend)
 
-This is a SaaS production-style incident tracking backend, it serves as a production service for logging incidents with full functioning user registry, authorization and authentication, using PyJWT to secure processing. It is built in Python , Flask, Sqlite and implements most real SaaS functions.
+A production-style incident tracking backend built with Flask, designed to simulate real-world support systems for logging, managing, and auditing incidents.
 
-Project overview
-================
+---
 
+## 📌 Overview
 
-I developed a backend incident tracking application using Python, Flask and SQLite, focusing on request lifecycle handling and data persistence. The application uses parameterized SQL queries to prevent injection risks and leverages Flask’s application and request contexts for safe database connection management. I separated schema initialization into an external SQL file for maintainability and structured routes to simulate a basic incident lifecycle workflow. The project models how support teams log, track, and close incidents in operational systems.
+This project models how operational teams handle incidents — including creation, updates, severity tracking, and audit logging — within a secure, API-driven system.
 
-I chose Flask intentionally because I wanted greater control over the architecture and to better understand request handling and database lifecycle management at a lower level. Flask’s minimal design allowed me to focus on core backend mechanics like routing, context management, and SQL operations without the abstraction layers Django provides. For a small-scale incident tracker, Flask offered the right balance of simplicity and flexibility. If I had had the thought that the project would grow from a simple CRUD and require more built-in features like ORM support, admin panels, or rapid scaling to a larger application, Django would have been a strong alternative.
+It emphasizes **clean architecture**, **security**, and **real-world backend practices**.
 
-My focus was on modeling how real suport teams handle incidents, status changes, severity, and accountability,to demonstrate how real production systems would handle concerns by logging into a system and logging incidents by title, with description, with a measure of the severity of the incidence, and the app would then capture the user and loggers user_id, the time the incident is logged, and also keep track by audit, who and when an update, delete or restore is done.
+---
 
-In my first week, I started of with a basic flask application, a small system with API key authorization, html rendering, basically a simple system. After realizing the finilization of the CRUD app, I move d on to persistent moemory, and turned it to an API. Focus was on the backend and as it grew and more pieces and logical steps turned it into the product we see today.
+## ⚙️ Features
 
-Key Features
-============
-JWT authentication
-role authorization
-Soft Delete and restore
-rate limiting
-Lockout protection
-request logging
-Swagger docs
-repository pattern
-service layer
-integration tests
-Docker support
+* 🔐 JWT Authentication (PyJWT)
+* 👤 Role-based Authorization
+* 📝 Incident CRUD (Create, Read, Update, Delete)
+* ♻️ Soft Delete & Restore
+* 🚫 Rate Limiting & Lockout Protection
+* 📜 Request Logging & Audit Trail
+* 📘 Swagger API Documentation
+* 🧱 Repository + Service Layer Architecture
+* 🧪 Integration Testing (pytest)
+* 🐳 Dockerized Deployment
 
-Tech Stack
-==========
+---
 
-languages:
-----------
+## 🧰 Tech Stack
 
-Python
+### Language
 
-Libraries:
-----------
+* Python
 
-Flask
-Flasgger
-Flask-Limiter
-PyJWT
-pytest
-python-dotenv
-gunicorn
+### Framework & Libraries
 
-Infrustructure
-==============
-Docker
-Docker compose
+* Flask
+* Flasgger (Swagger Docs)
+* Flask-Limiter
+* PyJWT
+* pytest
+* python-dotenv
+* gunicorn
 
-Other Tools
-===========
+### Infrastructure
 
-Git
-GitHub
+* Docker
+* Docker Compose
+* PostgreSQL (Production)
+* SQLite (Development)
 
-Project Architecture
-====================
+---
 
-incident-tracker-api
+## 🏗️ Project Structure
+
+```
+incident-tracker-api/
 │
 ├── app.py
 ├── config.py
@@ -86,46 +79,89 @@ incident-tracker-api
 ├── schema.sql
 ├── pytest.ini
 │
-├── .gitignore
 ├── .env.example
 └── README.md
+```
 
-Installation
-============
+---
 
-1. Clone the repository
+## 🚀 Getting Started
 
-git clone https://github.com/jaazbogati/incident_tracker
+### 1. Clone Repository
 
-2. Create environment file
+```
+git clone https://github.com/your-username/incident-tracker-api
+cd incident-tracker-api
+```
 
+---
+
+### 2. Create Environment File
+
+```
 cp .env.example .env
+```
 
-3. Add your API keys to .env
+Update `.env` with:
 
-4. Start services
+```
+DATABASE_URL=your_database_url
+JWT_SECRET=your_secret
+```
 
+---
+
+### 3. Run with Docker
+
+```
 docker compose up --build
+```
 
-Future Improvements
-===================
-Migration from SQLite to production grade PostgreSQL
-Develop UI/UX
-Refactoring to support frontend and mobile intergration
+---
 
-Author
-======
+### 4. Access API
 
-Japhet Jeremiah
+```
+http://localhost:5000
+```
+
+Swagger docs available at:
+
+```
+/apidocs
+```
+
+---
+
+## 🌐 Deployment
+
+The API is deployed using Docker on Render.
+
+---
+
+## 🔮 Future Improvements
+
+* Full PostgreSQL migration (production scaling)
+* Frontend integration (React dashboard)
+* Advanced analytics & reporting
+* Role-based UI system
+
+---
+
+## 👤 Author
+
+**Japhet Jeremiah**
 Associate Degree in Computer Science
 
-Interested in opportunities in:
-- Data Analytics
-- Data Engineering
-- Python Development
-- IT Support & Technical Operations
+Interested in:
 
-License
-=======
+* Data Analytics
+* Data Engineering
+* Python Development
+* Technical Support & Operations
 
-This Project is licenced under the MIT License.
+---
+
+## 📄 License
+
+MIT License
