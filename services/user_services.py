@@ -97,7 +97,7 @@ def change_user_role_service(user_id, data):
     cursor.execute("""
         UPDATE users
         SET role = %s, updated_at = %s
-        WHERE id = %s AND is_active = TRUE
+        WHERE id = %s AND is_active = 1
     """, (role, now, user_id))
 
     if cursor.rowcount == 0:
@@ -123,8 +123,8 @@ def deactivate_user_service(user_id):
     cursor = db.cursor(cursor_factory=RealDictCursor)
 
     cursor.execute("""
-        UPDATE users SET is_active = FALSE, updated_at = %s
-        WHERE id = %s AND is_active = TRUE
+        UPDATE users SET is_active = 0, updated_at = %s
+        WHERE id = %s AND is_active = 1
     """, (now, user_id))
 
     if cursor.rowcount == 0:
