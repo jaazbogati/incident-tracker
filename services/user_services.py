@@ -97,22 +97,21 @@ def change_user_role_service(user_id, data):
     cursor.execute("""
         UPDATE users
         SET role = %s, updated_at = %s
-        WHERE id = %s AND is_active = 1
+        WHERE id = %s AND is_active = TRUE
     """, (role, now, user_id))
+
+    if cursor.rowcount == 0:
+        raise NotFoundError("User not found or inactive")
 
     db.commit()
 
     log_event(
-        g.user["id"],
+        None,
         "USER_ROLE_CHANGED",
         None,
         f"Role changed to {role}",
         user_id
     )
-
-    if cursor.rowcount == 0:
-        raise NotFoundError("User not found or inactive")
-    
     return {"updated_user_id": user_id, "new_role": role}
 
 def deactivate_user_service(user_id):
@@ -128,19 +127,19 @@ def deactivate_user_service(user_id):
         WHERE id = %s AND is_active = TRUE
     """, (now, user_id))
 
+    if cursor.rowcount == 0:
+        raise NotFoundError("User not found or already inactive")
+
     db.commit()
 
     log_event(
-        g.user["id"],
+        None,
         "USER_DEACTIVATED",
         None,
         "User deactivated",
         user_id
     )
 
-    if cursor.rowcount == 0:
-        raise NotFoundError("User not found or already inactive")
-    
     return{"deactivated_user_id": user_id}
     
 
