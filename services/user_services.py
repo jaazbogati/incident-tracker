@@ -4,6 +4,7 @@ from utils.constants import ROLES
 from database import get_db
 from datetime import datetime, UTC
 from werkzeug.security import generate_password_hash
+from psycopg2.extras import RealDictCursor
 from flask import g
 
 
@@ -33,7 +34,7 @@ def create_user_service(data):
     now = datetime.now(UTC).isoformat()
 
     db = get_db()
-    cursor = db.cursor()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
 
     cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
     if cursor.fetchone():
@@ -69,7 +70,7 @@ def list_users_service():
         raise AppError("Only registered users can view users", 403)
     
     db = get_db()
-    cursor = db.cursor()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
 
     cursor.execute("""
         SELECT id, email, role, is_active, created_at FROM users
@@ -91,7 +92,7 @@ def change_user_role_service(user_id, data):
     
     now = datetime.now(UTC).isoformat()
     db = get_db()
-    cursor = db.cursor()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
 
     cursor.execute("""
         UPDATE users
@@ -120,7 +121,7 @@ def deactivate_user_service(user_id):
     
     now = datetime.now(UTC).isoformat()
     db = get_db()
-    cursor = db.cursor()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
 
     cursor.execute("""
         UPDATE users SET is_active = FALSE, updated_at = %s

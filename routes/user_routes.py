@@ -36,6 +36,12 @@ user_bp = Blueprint("users", __name__)
     }
 })
 def create_user():
+    """
+    Create a new user
+    
+    """
+
+
     data = request.get_json()
     result = create_user_service(data)
     return success_response(result, 201)
@@ -51,6 +57,11 @@ def create_user():
     }
 })
 def list_users():
+    """
+    List all users
+    """
+
+
     result = list_users_service()
     return success_response(result, 200)
 
@@ -88,6 +99,9 @@ def list_users():
     }    
 })
 def change_user_role(user_id):
+    """
+    Change a user's role
+    """
     data = request.get_json()
     result = change_user_role_service(user_id, data)
     return success_response(result, 200)
@@ -111,5 +125,8 @@ def change_user_role(user_id):
     }
 })
 def deactivate_user(user_id):
+    """
+    Deactivate a user
+    """
     result = deactivate_user_service(user_id)
     return success_response(result, 200)
