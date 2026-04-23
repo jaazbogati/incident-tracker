@@ -77,7 +77,7 @@ def list_incidents_service(filters, user):
         count_query += where_clause
 
     #*********Pagination Defaults***************
-    limit = int(filters.get("limit") or 10)
+    limit = int(filters.get("limit") or 20)
     offset = int(filters.get("offset") or 0)
 
     if limit < 1 or limit > 100:
