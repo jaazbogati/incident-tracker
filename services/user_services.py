@@ -6,6 +6,8 @@ from datetime import datetime, UTC
 from werkzeug.security import generate_password_hash
 from psycopg2.extras import RealDictCursor
 from flask import g
+import bcrypt
+
 
 
 
@@ -30,7 +32,8 @@ def create_user_service(data):
     if role not in ROLES:
         raise AppError(f"Invalid role: {role}", 400)
 
-    hashed_password = generate_password_hash(password)
+    hashed_pw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+    hashed_pw = hashed_pw.decode("utf-8")
     now = datetime.now(UTC).isoformat()
 
     db = get_db()
@@ -44,7 +47,7 @@ def create_user_service(data):
         INSERT INTO users (username, email, password_hash, role, created_at, updated_at)
         VALUES (%s, %s, %s, %s, %s, %s)
         RETURNING id
-    """, (username, email, hashed_password, role, now, now))
+    """, (username, email, hashed_pw, role, now, now))
 
     row = cursor.fetchone()
     user_id = row["id"]
