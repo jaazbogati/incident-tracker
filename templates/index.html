@@ -65,6 +65,10 @@
 
     async function loadUsers() {
       const token = getToken();
+      if (!token) {
+        alert("Please login first");
+        return;
+      }
       const res = await fetch("/api/v1/users", {
         headers: {
           "Authorization": "Bearer " + token
